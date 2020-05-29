@@ -1,0 +1,29 @@
+<html>
+    <head></head>
+    <body>
+       
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills" style="margin-left: 27%;" >
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>Add Candidate</a>
+              <ng-template ngbNavContent>
+                <p><app-add-candidate></app-add-candidate></p>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>Search and Edit Candidates</a>
+              <ng-template ngbNavContent>
+                <p><app-search-and-edit-candidates></app-search-and-edit-candidates></p>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+              <a ngbNavLink>Trends</a>
+              <ng-template ngbNavContent>
+                <p><app-trends></app-trends></p>
+              </ng-template>
+            </li>
+        </ul>
+          <div [ngbNavOutlet]="nav" class="mt-2" style=""></div>
+     
+
+    </body>
+</html>

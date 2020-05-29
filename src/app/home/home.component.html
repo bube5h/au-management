@@ -1,0 +1,40 @@
+<p>
+   </p>
+  
+
+   <div style="display: flex;" >
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills" orientation="vertical" style="flex: 1;">
+        <li ngbNavItem="oppurtunityManagement">
+        <a ngbNavLink>Opportunity Management</a>
+            <ng-template ngbNavContent>
+                <p></p>
+            </ng-template>
+        </li>
+        <li ngbNavItem="candidateManagement">
+        <a ngbNavLink>Candidate Management</a>
+            <ng-template ngbNavContent>
+                <p><app-candidate-management></app-candidate-management></p>
+            </ng-template>
+        </li>
+        <li ngbNavItem="courseManagement">
+        <a ngbNavLink>Course Management</a>
+            <ng-template ngbNavContent>
+                <p></p>
+            </ng-template>
+        </li>
+        <li ngbNavItem="assessment">
+            <a ngbNavLink>Assessment</a>
+                <ng-template ngbNavContent>
+                    <p></p>
+                </ng-template>
+        </li>
+        <li ngbNavItem="onboardingPortal">
+            <a ngbNavLink>Onboarding Portal</a>
+                <ng-template ngbNavContent>
+                    <p></p>
+                </ng-template>
+        </li>
+    </ul>
+  
+    <div [ngbNavOutlet]="nav" class="ml-4" style="flex: 5.7;"></div>
+  </div>

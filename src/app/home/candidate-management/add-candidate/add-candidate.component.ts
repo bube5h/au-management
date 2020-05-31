@@ -43,14 +43,11 @@ export class AddCandidateComponent
  private locationmap = new  Map();
  private jobdescriptionmap = new Map();
  private institutemap = new  Map();
- private str :string;
- private skillcount : number;
 
 
 	ngOnInit()
 	{
 		// this.skillmap.set(1,"fg");
-		this.skillcount = 0;
 		this.locationservice.getLocations().subscribe(l => {
 																this.locations = l;
 																for(let location of this.locations)
@@ -103,7 +100,6 @@ export class AddCandidateComponent
 
 	onAddSkill()
 	{
-		this.skillcount++;
 		(<FormArray>this.addCandidateForm.get('skills')).push(new FormControl(null,Validators.required));
 	}
 

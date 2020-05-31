@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+
+
 @Component({
   selector: 'app-candidate-management',
   templateUrl: './candidate-management.component.html',
@@ -9,9 +11,12 @@ export class CandidateManagementComponent implements OnInit {
 
   constructor() { }
 
-  active = 1;
+  active = 2;
 
   ngOnInit(): void {
+
   }
+
+
 
 }

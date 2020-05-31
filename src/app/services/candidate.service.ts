@@ -46,6 +46,11 @@ export class CandidateService
   
     }
     
+
+    updateCandidate(candidate : Candidate)
+    {
+        this.http.put('http://localhost:8080/candidates',JSON.stringify(candidate),{headers: { 'Content-Type': 'application/json' }}).subscribe();     
+    }
   
 
 }

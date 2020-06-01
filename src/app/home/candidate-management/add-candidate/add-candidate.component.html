@@ -1,103 +1,74 @@
 <div class="container" style="border: grey solid;">
-  <div class="row">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <form [formGroup]="addCandidateForm" (ngSubmit)="onSubmit()" style="width: 60%; margin-left: 40%; padding-top: 60px;" >
-        <label for="empid">Empid : </label>
-            <input
-              type="text"
-              id="empid"
-              formControlName="empid"
-              class="form-control">
+	<div class="row">
+		<div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+			<form [formGroup]="addCandidateForm" (ngSubmit)="onSubmit()"
+				style="width: 60%; margin-left: 40%; padding-top: 60px;">
+				<label for="empid">Empid : </label>
+				<input type="text" id="empid" formControlName="empid" class="form-control" oninput="this.value = this.value.toLowerCase()">
 
-              <label for="firstname">Firstname : </label>
-              <input
-                type="text"
-                id="firstname"
-                formControlName="firstname"
-                class="form-control">
+				<label for="firstname">Firstname : </label>
+				<input type="text" id="firstname" formControlName="firstname" class="form-control" oninput="this.value = this.value.toLowerCase()">
 
-            <label for="lastname">Lastname : </label>
-            <input
-              type="text"
-              id="lastname"
-              formControlName="lastname"
-              class="form-control">
+				<label for="lastname">Lastname : </label>
+				<input type="text" id="lastname" formControlName="lastname" class="form-control" oninput="this.value = this.value.toLowerCase()">
 
-            <label for="email">Email : </label>
-            <input
-              type="email"
-              id="email"
-              formControlName="email"
-              class="form-control">
-              <span *ngIf="!addCandidateForm.get('email').valid && addCandidateForm.get('email').touched" 
-              class="help-block">Please Enter Valid Email Id!</span><br>
-            
-
-              <label for="contactnumber">Contact  Number : </label>
-            <input
-              type="number"
-              id="contactnumber"
-              formControlName="contactnumber"
-			  class="form-control"><br>
-			  
-			  <label for="skills">Skills : </label>
-			  <div formArrayName="skills" id="skills">
-					<button 
-						class="btn btn-primary"
-						type="button"
-						(click)="onAddSkill()">Add Skill</button>
-						<br>
-						<div
-							class="form-group"
-							*ngFor="let skillControl of addCandidateForm.get('skills')['controls']; let i = index">
-							<select [formControlName]="i"  class="form-control" >  
-								<option [value]="skill.skillid" *ngFor="let skill of skills">{{skill.skill}} </option>  
-							</select><br>
-						</div>
-			  </div>
-			  <br>
-
-			  
-			<label for="instituteid">Institutes : </label>
-            <select formControlName="instituteid" id="instituteid" class="form-control" >  
-              <option [value]="institute.instituteid" *ngFor="let institute of institutes">{{institute.institute}} </option>  
-          </select><br>
+				<label for="email">Email : </label>
+				<input type="email" id="email" formControlName="email" class="form-control" oninput="this.value = this.value.toLowerCase()">
+				<span *ngIf="!addCandidateForm.get('email').valid && addCandidateForm.get('email').touched"
+					class="help-block">Please Enter Valid Email Id!</span><br>
 
 
-              <label for="jobdescriptionid">Job Description : </label>
-              <select formControlName="jobdescriptionid" id="jobdescriptionid" class="form-control" >  
-                <option [value]="jobdescription.jobdescriptionid" *ngFor="let jobdescription of jobdescriptions">{{jobdescription.jobdescription}} </option>  
-            </select><br>
+				<label for="contactnumber">Contact Number : </label>
+				<input type="number" id="contactnumber" formControlName="contactnumber" class="form-control"><br>
 
-              <label for="joiningdate">Joining Date : </label>
-            <input
-              type="date"
-              id="joiningdate"
-              formControlName="joiningdate"
-              class="form-control">
+				<label for="skills">Skills : </label>
+				<div formArrayName="skills" id="skills">
+					<button class="btn btn-primary" type="button" (click)="onAddSkill()">Add Skill</button>
+					<br><br>
+					<div class="form-group"
+						*ngFor="let skillControl of addCandidateForm.get('skills')['controls']; let i = index">
+						<select [formControlName]="i" class="form-control">
+							<option [value]="skill.skillid" *ngFor="let skill of skills">{{skill.skill | titlecase}} </option>
+						</select><br>
+					</div>
+				</div>
+				<br>
 
 
-              <label for="locationid">Location : </label>
-            <select formControlName="locationid" id="locationid" class="form-control" >  
-              <option [value]="location.locationid" *ngFor="let location of locations">{{location.location}} </option>  
-          </select><br>
+				<label for="instituteid">Institutes : </label>
+				<select formControlName="instituteid" id="instituteid" class="form-control">
+					<option [value]="institute.instituteid" *ngFor="let institute of institutes">{{institute.institute | titlecase}} </option>
+				</select><br>
+
+
+				<label for="jobdescriptionid">Job Description : </label>
+				<select formControlName="jobdescriptionid" id="jobdescriptionid" class="form-control">
+					<option [value]="jobdescription.jobdescriptionid" *ngFor="let jobdescription of jobdescriptions">
+						{{jobdescription.jobdescription | titlecase}} </option>
+				</select><br>
+
+				<label for="joiningdate">Joining Date : </label>
+				<input type="date" id="joiningdate" formControlName="joiningdate" class="form-control">
+
+
+				<label for="locationid">Location : </label>
+				<select formControlName="locationid" id="locationid" class="form-control">
+					<option [value]="location.locationid" *ngFor="let location of locations">{{location.location | titlecase}} </option>
+				</select><br>
 
 
 
-              <label for="feedback">Feedback : </label>
-            <input
-              type="text"
-              id="feedback"
-              formControlName="feedback"
-              class="form-control">
+				<label for="feedback">Feedback : </label>
+				<input type="text" id="feedback" formControlName="feedback" class="form-control" oninput="this.value = this.value.toLowerCase()">
 
-              <span *ngIf="!addCandidateForm.valid && addCandidateForm.touched" 
-              class="help-block">Please Enter Valid Data!</span><br>
+				<span *ngIf="!addCandidateForm.valid && addCandidateForm.touched" class="help-block">Please Enter Valid
+					Data!</span><br>
 
 
-			  <!--  -->
-        <button  class="btn btn-primary" [disabled]="!addCandidateForm.valid" type="submit">Submit</button>
-      </form>
-    </div>
-  </div>
+				<!--  -->
+				<button class="btn btn-primary float-right" [disabled]="!addCandidateForm.valid" type="submit">Submit</button>
+			</form>
+		</div>
+	</div>
+	<br>
 </div>

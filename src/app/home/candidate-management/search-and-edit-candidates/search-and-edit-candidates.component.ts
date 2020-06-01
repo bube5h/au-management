@@ -24,7 +24,10 @@ import {
 import {HttpClient, HttpParams} from '@angular/common/http';
 
 
-@Component({selector: 'app-search-and-edit-candidates', templateUrl: './search-and-edit-candidates.component.html', styles: [`.form-control { width: 300px; }`]})
+@Component({selector: 'app-search-and-edit-candidates', 
+templateUrl: './search-and-edit-candidates.component.html', 
+styleUrls: ['./search-and-edit-candidates.component.css']
+})
 export class SearchAndEditCandidatesComponent implements OnInit {
     public model : any;
     public searchSuggestions : String[];
@@ -105,19 +108,19 @@ export class SearchAndEditCandidatesComponent implements OnInit {
         this.searchCandidateForm = new FormGroup({'search-box': new FormControl(null), 'filter': new FormControl(null)});
 
 
-        this.updateCandidateForm = new FormGroup({
-            'empid': new FormControl(null, Validators.required),
-            'firstname': new FormControl(null, Validators.required),
-            'lastname': new FormControl(null, Validators.required),
-            'email': new FormControl(null, [Validators.required, Validators.email]),
-            'contactnumber': new FormControl(null, Validators.required),
-            'instituteid': new FormControl(null, Validators.required),
-            'jobdescriptionid': new FormControl(null, Validators.required),
-            'joiningdate': new FormControl(null, Validators.required),
-            'locationid': new FormControl(null, Validators.required),
-            'feedback': new FormControl(null, Validators.required),
-            'skills' : new FormArray([])
-        });
+        // this.updateCandidateForm = new FormGroup({
+        //     'empid': new FormControl(null, Validators.required),
+        //     'firstname': new FormControl(null, Validators.required),
+        //     'lastname': new FormControl(null, Validators.required),
+        //     'email': new FormControl(null, [Validators.required, Validators.email]),
+        //     'contactnumber': new FormControl(null, Validators.required),
+        //     'instituteid': new FormControl(null, Validators.required),
+        //     'jobdescriptionid': new FormControl(null, Validators.required),
+        //     'joiningdate': new FormControl(null, Validators.required),
+        //     'locationid': new FormControl(null, Validators.required),
+        //     'feedback': new FormControl(null, Validators.required),
+        //     'skills' : new FormArray([])
+        // });
 
 
     }
@@ -179,7 +182,7 @@ export class SearchAndEditCandidatesComponent implements OnInit {
         params = params.append('by', this.searchCandidateForm.get('filter').value);
         this.http.get<Candidate[]>("http://localhost:8080/candidates/" + this.searchCandidateForm.get('search-box').value, {params: params}).subscribe(res => {
             this.candidates = res;
-            console.log(this.candidates);
+            // console.log(this.candidates);
         });
     }
 
@@ -199,11 +202,12 @@ export class SearchAndEditCandidatesComponent implements OnInit {
             'skills' : new FormArray([])
         });
 
-        var target = event.target || event.srcElement || event.currentTarget;
+        var target = event.target ;
+        // || event.srcElement || event.currentTarget
         var idAttr = target.attributes.id;
         var value = idAttr.nodeValue;
-        console.log(value);
-        console.log(this.candidates[value]);
+        // console.log(value);
+        // console.log(this.candidates[value]);
         this.editing = true;
 
         this.candidate = this.candidates[value];
@@ -227,7 +231,7 @@ export class SearchAndEditCandidatesComponent implements OnInit {
 			temp = "" + skill.skillid;
 			formArrayValues.push(temp);
 		}
-		console.log(formArrayValues);
+		// console.log(formArrayValues);
 		this.updateCandidateForm.patchValue(
 			{
 				skills : formArrayValues
@@ -254,7 +258,7 @@ export class SearchAndEditCandidatesComponent implements OnInit {
         for(let i of this.updateCandidateForm.get('skills').value)
         {
         let skill = new Skill(+i,this.skillmap.get(+i));
-        console.log(skill);
+        // console.log(skill);
         this.selectedskills.push(skill);
         }
         this.candidate.skills = this.selectedskills;
@@ -266,15 +270,39 @@ export class SearchAndEditCandidatesComponent implements OnInit {
         this.candidate.location = this.locationmap.get(+this.candidate.locationid);
         this.candidate.joiningdate = this.updateCandidateForm.get('joiningdate').value;
         this.candidate.feedback = this.updateCandidateForm.get('feedback').value;
-        console.log(this.candidate);
+        // console.log(this.candidate);
         this.candidateservice.updateCandidate(this.candidate);
 		this.updateCandidateForm.reset();
 		// this.updateCandidateForm.
         this.editing = false;
     }
 
+    onCancelEdit()
+    {
+        this.editing = false;
+    }
 
-    search = (text$ : Observable < string >) => text$.pipe(debounceTime(200), distinctUntilChanged(), map(term => term.length < 2 ? [] : this.searchSuggestions.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+    onDelete(event)
+    {
+        var target = event.target ;
+        // || event.srcElement || event.currentTarget
+        var idAttr = target.attributes.id;
+        var value = idAttr.nodeValue;
+        // console.log(value);
+        // console.log(this.candidates[value]);
+        this.editing = false;
+
+
+        this.candidate = this.candidates[value];
+        this.candidateservice.deleteCandidate(this.candidate.empid);
+        // console.log(this.candidates[value]);
+        // console.log(value);
+        this.candidates.splice(value,1);
+        // console.log(this.candidates);
+    }
+
+
+    search = (text$ : Observable < string >) => text$.pipe(debounceTime(200), distinctUntilChanged(), map(term => term.length < 1 ? [] : this.searchSuggestions.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
 
 }
 

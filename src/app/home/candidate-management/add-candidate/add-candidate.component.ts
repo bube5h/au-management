@@ -13,6 +13,7 @@ import { InstituteService } from 'src/app/services/institute.service';
 import { Institute } from 'src/app/models/institute.model';
 import { Candidate } from 'src/app/models/candidate.model';
 import { CandidateService } from 'src/app/services/candidate.service';
+import { LowerCasePipe } from '@angular/common';
 
 
 @Component({
@@ -110,6 +111,7 @@ export class AddCandidateComponent
 
 		this.candidate = new Candidate();
 		this.candidate.empid = this.addCandidateForm.get('empid').value;
+		LowerCasePipe
 		this.candidate.firstname = this.addCandidateForm.get('firstname').value;
 		this.candidate.lastname = this.addCandidateForm.get('lastname').value;
 		this.candidate.email = this.addCandidateForm.get('email').value;

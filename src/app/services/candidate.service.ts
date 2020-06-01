@@ -52,5 +52,9 @@ export class CandidateService
         this.http.put('http://localhost:8080/candidates',JSON.stringify(candidate),{headers: { 'Content-Type': 'application/json' }}).subscribe();     
     }
   
+    deleteCandidate(empid : String )
+    {
+        this.http.delete('http://localhost:8080/candidates/' + empid).subscribe();
+    }
 
 }

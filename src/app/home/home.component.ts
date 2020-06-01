@@ -9,7 +9,7 @@ export class HomeComponent implements OnInit {
 
   constructor() { }
 
-  active = 'candidateManagement';
+  active = 'oppurtunityManagement';
 
   ngOnInit(): void {
    

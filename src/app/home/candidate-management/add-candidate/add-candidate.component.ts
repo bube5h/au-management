@@ -111,7 +111,6 @@ export class AddCandidateComponent
 
 		this.candidate = new Candidate();
 		this.candidate.empid = this.addCandidateForm.get('empid').value;
-		LowerCasePipe
 		this.candidate.firstname = this.addCandidateForm.get('firstname').value;
 		this.candidate.lastname = this.addCandidateForm.get('lastname').value;
 		this.candidate.email = this.addCandidateForm.get('email').value;
@@ -134,7 +133,19 @@ export class AddCandidateComponent
 		// console.log(this.candidate);
 		this.candidateservice.createCandidate(this.candidate);
 		this.addCandidateForm.reset();
+		this.addCandidateForm = new FormGroup({
+			'empid': new FormControl(null, Validators.required),
+			'firstname' : new FormControl(null,Validators.required),
+			'lastname' : new FormControl(null,Validators.required),
+			'email' : new FormControl(null,[Validators.required, Validators.email]),
+			'contactnumber' : new FormControl(null,Validators.required),
+			'instituteid' : new FormControl(null,Validators.required),
+			'jobdescriptionid' : new FormControl(null,Validators.required),
+			'joiningdate' : new FormControl(null,Validators.required),
+			'locationid' : new FormControl(null,Validators.required),
+			'feedback' : new FormControl(null,Validators.required),
+			'skills' : new FormArray([])
+		});
+		this.selectedskills = [];
 	}
-
-
 }

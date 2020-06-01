@@ -1,1 +1,66 @@
-<p>trends works!</p>
+<div class="container">
+<div style="margin-top: 3%;">
+    <div class="container" style="padding-top: 3%; border: 1px solid black;">
+      <form [formGroup]="trendForm">
+        <select formControlName="filter" id="filter" class="form-control" (change)="onChange()">
+            <option [value]="filter.id" *ngFor="let filter of filters">{{filter.value}} </option>
+        </select>
+        <br><br>
+
+        
+<div class="row">
+  <div class="col-md-6">
+    <div style="display: block; " class="chart" [hidden]="!visible">
+      <canvas baseChart 
+             
+              [datasets]="labelMFL"
+              [labels]="lineChartLabels"
+              [options]="lineChartOptions"
+              [colors]="lineChartColors"
+              [legend]="lineChartLegend"
+              [chartType]="lineChartType"
+              >
+          </canvas>
+    </div>
+  </div>
+</div>
+
+      </form>
+    </div>
+</div>
+</div>
+
+<!-- (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)" -->
+
+
+
+
+
+
+<!-- <div style="margin-top: 3%;">
+    <div class="container" style="padding-top: 3%; border: 1px solid black;">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills" style="margin-left: 27%;" >
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>Line Chart</a>
+              <ng-template ngbNavContent>
+                <p><app-line-chart></app-line-chart></p>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>Bar Chart</a>
+              <ng-template ngbNavContent>
+                <p><app-bar-chart></app-bar-chart></p>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+              <a ngbNavLink>Pie Chart</a>
+              <ng-template ngbNavContent>
+                <p><app-pie-chart></app-pie-chart></p>
+              </ng-template>
+            </li>
+        </ul>
+          <div [ngbNavOutlet]="nav" class="mt-2" ></div>
+</div>
+
+</div> -->

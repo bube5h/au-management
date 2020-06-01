@@ -11,7 +11,7 @@ export class CandidateManagementComponent implements OnInit {
 
   constructor() { }
 
-  active = 2;
+  active = 3;
 
   ngOnInit(): void {
 

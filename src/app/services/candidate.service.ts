@@ -16,6 +16,10 @@ export class CandidateService
         return this.http.get<Candidate[]>('http://localhost:8080/candidates');
     }
 
+    getCandidateEmpIds(): Observable<String[]> {  
+        return this.http.get<String[]>('http://localhost:8080/candidates/empids');
+    }
+
     createCandidate(candidate : Candidate)
     {
         let newcandidate= 

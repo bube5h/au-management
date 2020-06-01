@@ -77,7 +77,7 @@ export class SearchAndEditCandidatesComponent implements OnInit {
 
 
     ngOnInit() {
-        this.http.get<String[]>("http://localhost:8080/candidates/empids").subscribe(s => this.searchSuggestions = s);
+        this.candidateservice.getCandidateEmpIds().subscribe(s => this.searchSuggestions = s);
 
         this.locationservice.getLocations().subscribe(l => {
             this.locations = l;
@@ -135,17 +135,17 @@ export class SearchAndEditCandidatesComponent implements OnInit {
                 this.http.get<String[]>("http://localhost:8080/candidates/empids").subscribe(s => this.searchSuggestions = s);
                 break;
             case "location":
-                this.http.get<Location[]>("http://localhost:8080/locations").subscribe(locations => {
+                this.locationservice.getLocations().subscribe(locations => {
                     let temp: String[] = [];
                     for (let location of locations) {
                         temp.push(location.location);
                     }
                     this.searchSuggestions = temp;
                 });
-                this.currentFilter = this.searchCandidateForm.get('filter').value;
+                // this.currentFilter = this.searchCandidateForm.get('filter').value;
                 break;
             case "institute":
-                this.http.get<Institute[]>("http://localhost:8080/institutes").subscribe(institutes => {
+                this.instituteservice.geInstitutes().subscribe(institutes => {
                     let temp: String[] = [];
                     for (let institute of institutes) {
                         temp.push(institute.institute);
@@ -154,7 +154,7 @@ export class SearchAndEditCandidatesComponent implements OnInit {
                 });
                 break;
             case "jobdescription":
-                this.http.get<Jobdescription[]>("http://localhost:8080/jobdescriptions").subscribe(jobdescriptions => {
+                this.jobdescriptionservice.getJobdescriptions().subscribe(jobdescriptions => {
                     let temp: String[] = [];
                     for (let jobdescription of jobdescriptions) {
                         temp.push(jobdescription.jobdescription);
@@ -163,7 +163,7 @@ export class SearchAndEditCandidatesComponent implements OnInit {
                 });
                 break;
             case "skill":
-                this.http.get<Skill[]>("http://localhost:8080/skills").subscribe(skills => {
+                this.skillservice.getSkills().subscribe(skills => {
                     let temp: String[] = [];
                     for (let skill of skills) {
                         temp.push(skill.skill);

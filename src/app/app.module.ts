@@ -16,6 +16,12 @@ import { JobdescriptionService } from './services/jobdescription.service';
 import { CandidateService } from './services/candidate.service';
 import { SkillService } from './services/skill.service';
 import { InstituteService } from './services/institute.service';
+import { LineChartComponent } from './home/candidate-management/trends/line-chart/line-chart.component';
+import { BarChartComponent } from './home/candidate-management/trends/bar-chart/bar-chart.component';
+import { PieChartComponent } from './home/candidate-management/trends/pie-chart/pie-chart.component';
+import { ChartsModule } from 'ng2-charts';
+import { TrendService } from './services/trend.service';
+
 
 @NgModule({
   declarations: [
@@ -24,7 +30,10 @@ import { InstituteService } from './services/institute.service';
     CandidateManagementComponent,
     AddCandidateComponent,
     SearchAndEditCandidatesComponent,
-    TrendsComponent
+    TrendsComponent,
+    LineChartComponent,
+    BarChartComponent,
+    PieChartComponent
   ],
   imports: [
     BrowserModule,
@@ -32,9 +41,10 @@ import { InstituteService } from './services/institute.service';
     NgbModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ChartsModule
   ],
-  providers: [LocationService,JobdescriptionService,CandidateService,SkillService,InstituteService],
+  providers: [LocationService,JobdescriptionService,CandidateService,SkillService,InstituteService,TrendService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

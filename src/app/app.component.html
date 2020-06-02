@@ -2,27 +2,57 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">  
+    
 </head>
 <body>
 
 <div class="header">
-  <a href="#default" class="logo">Accolite AU Management</a>
+  <a href="#default" class="logo"><img src="assets/images/main-logo.jpg" width="150" height="40"> AU Management</a>
   <div class="header-right">
+  <div style="margin-top: 8px;">
     <a href="#home">Home</a>
     <a href="#contact">Contact</a>
     <a href="#about">About</a>
+    <span *ngIf="loggedIn===true">
+      <button type="button" class="btn">Hey {{user.name}}!</button>
+      <button type="button" (click)="signOut()" class="btn btn-primary">Sign Out</button>  </span>
+  </div>
   </div>
 </div>
 
 <div style="padding-left:20px">
 </div>
+  <div *ngIf="loggedIn===false">
+        <div style="text-align: center;">
+          <img src="assets/images/accolite.png" width="800" height="250"><br><br><br>
+           <button type="button" (click)="signInWithGoogle()" class="btn btn-primary">Sign In With Google</button>
+        </div>
+  </div>   
+  
+  
+  
 
 
+<div *ngIf="loggedIn===true">
+  <!-- <div class="form-group">
+    <label for="firstname">First Name</label>
+    <input type="text" class="form-control" id="firstname" [value]="user.firstName" readonly >
+  </div>          <div class="form-group">
+    <label for="lastname">Last Name</label>
+    <input type="text" class="form-control" id="lastname" [value]="user.lastName" readonly >
+  </div>          <div class="form-group">
+    <label for="email2">Email</label>
+    <input type="text" class="form-control" id="email2" [value]="user.email" readonly >
+  </div> -->
+  
+<app-home></app-home>
+</div>
 
 
+         
 </body>
 </html>
 
 
 
-<app-home></app-home>

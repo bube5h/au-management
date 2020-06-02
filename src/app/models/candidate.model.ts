@@ -16,5 +16,4 @@ export class Candidate
     feedback : String;
     contactnumber : String;
     email : String;
-    
 }

@@ -21,7 +21,20 @@ import { BarChartComponent } from './home/candidate-management/trends/bar-chart/
 import { PieChartComponent } from './home/candidate-management/trends/pie-chart/pie-chart.component';
 import { ChartsModule } from 'ng2-charts';
 import { TrendService } from './services/trend.service';
-
+import { SocialLoginModule, AuthServiceConfig,GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
+const config = new AuthServiceConfig([
+  {
+    id: GoogleLoginProvider.PROVIDER_ID,
+    provider: new GoogleLoginProvider("536838765105-fjvmdjl2n9emdcdtk6fcd71fgi19aece.apps.googleusercontent.com")
+  },
+  {
+    id: FacebookLoginProvider.PROVIDER_ID,
+    provider: new FacebookLoginProvider('YOUR-APP-ID')
+  }
+]);
+export function provideConfig() {
+  return config;
+}
 
 @NgModule({
   declarations: [
@@ -42,9 +55,15 @@ import { TrendService } from './services/trend.service';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    ChartsModule
+    ChartsModule,
+    SocialLoginModule
   ],
-  providers: [LocationService,JobdescriptionService,CandidateService,SkillService,InstituteService,TrendService],
+  providers: [LocationService,
+    {
+      provide : AuthServiceConfig,
+      useFactory: provideConfig
+    },
+    JobdescriptionService,CandidateService,SkillService,InstituteService,TrendService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

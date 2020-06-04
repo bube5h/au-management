@@ -148,4 +148,23 @@ export class AddCandidateComponent
 		});
 		this.selectedskills = [];
 	}
+
+	onReset()
+	{
+		this.addCandidateForm.reset();
+		this.addCandidateForm = new FormGroup({
+			'empid': new FormControl(null, Validators.required),
+			'firstname' : new FormControl(null,Validators.required),
+			'lastname' : new FormControl(null,Validators.required),
+			'email' : new FormControl(null,[Validators.required, Validators.email]),
+			'contactnumber' : new FormControl(null,Validators.required),
+			'instituteid' : new FormControl(null,Validators.required),
+			'jobdescriptionid' : new FormControl(null,Validators.required),
+			'joiningdate' : new FormControl(null,Validators.required),
+			'locationid' : new FormControl(null,Validators.required),
+			'feedback' : new FormControl(null,Validators.required),
+			'skills' : new FormArray([])
+		});
+		this.selectedskills = [];
+	}
 }

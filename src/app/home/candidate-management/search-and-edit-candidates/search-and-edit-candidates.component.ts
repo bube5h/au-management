@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {Observable, concat} from 'rxjs';
 import {LocationService} from 'src/app/services/location.service';
 import {Location} from 'src/app/models/location.model';
 import {Jobdescription} from 'src/app/models/jobdescription.model';
@@ -30,8 +30,18 @@ styleUrls: ['./search-and-edit-candidates.component.css']
 })
 export class SearchAndEditCandidatesComponent implements OnInit {
     public model : any;
+    
+
+    data: Array<Candidate>;
+    totalRecords : number;
+    page:number = 1;
+
     public searchSuggestions : String[];
     public filters = [
+        {
+            value: "All Candidates",
+            id : "all"
+        },
         {
             value: "By Id",
             id: "id"
@@ -44,7 +54,7 @@ export class SearchAndEditCandidatesComponent implements OnInit {
             value: "By Institute",
             id: "institute"
         },
-        {
+        {   
             value: "By Jobdescription",
             id: "jobdescription"
         }, {
@@ -58,9 +68,14 @@ export class SearchAndEditCandidatesComponent implements OnInit {
     public candidates : Candidate[] = [];
     public visible : boolean = false;
     public editing : boolean = false;
+    public initialFilter : String = "all";
+    public idToDelete : number;
+    public empty : boolean = false;
 
-
-    constructor(private locationservice : LocationService, private jobdescriptionservice : JobdescriptionService, private skillservice : SkillService, private instituteservice : InstituteService, private candidateservice : CandidateService, private http : HttpClient) {}
+    constructor(private locationservice : LocationService, private jobdescriptionservice : JobdescriptionService, private skillservice : SkillService, private instituteservice : InstituteService, private candidateservice : CandidateService, private http : HttpClient) 
+    {
+        this.data = new Array<Candidate>();
+    }
 
 
     public locations : Location[];
@@ -74,6 +89,7 @@ export class SearchAndEditCandidatesComponent implements OnInit {
     private locationmap = new Map();
     private jobdescriptionmap = new Map();
     private institutemap = new Map();
+
 
 
     ngOnInit() {
@@ -106,6 +122,12 @@ export class SearchAndEditCandidatesComponent implements OnInit {
 
 
         this.searchCandidateForm = new FormGroup({'search-box': new FormControl(null), 'filter': new FormControl(null)});
+
+        // this.searchCandidateForm.patchValue(
+        //     {
+        //         search-box : ""
+        //     }
+        // )
 
 
         // this.updateCandidateForm = new FormGroup({
@@ -179,10 +201,26 @@ export class SearchAndEditCandidatesComponent implements OnInit {
     onSearch() {
         this.visible = true;
         let params = new HttpParams();
+        let query: String;
         params = params.append('by', this.searchCandidateForm.get('filter').value);
-        this.http.get<Candidate[]>("http://localhost:8080/candidates/" + this.searchCandidateForm.get('search-box').value, {params: params}).subscribe(res => {
+        query = this.searchCandidateForm.get('search-box').value;
+        
+
+        this.http.get<Candidate[]>("http://localhost:8080/candidates/" + query, {params: params}).subscribe(res => {
             this.candidates = res;
             // console.log(this.candidates);
+            this.data = this.candidates;
+            this.totalRecords = res.length;
+            if(this.candidates.length == 0)
+            {
+                this.empty = true;
+            }
+            else
+            {
+                this.empty = false;
+                this.data = res;
+                this.totalRecords = res.length;
+            }
         });
     }
 
@@ -282,25 +320,19 @@ export class SearchAndEditCandidatesComponent implements OnInit {
         this.editing = false;
     }
 
-    onDelete(event)
+    onMark(event)
     {
         var target = event.target ;
-        // || event.srcElement || event.currentTarget
         var idAttr = target.attributes.id;
-        var value = idAttr.nodeValue;
-        // console.log(value);
-        // console.log(this.candidates[value]);
+        this.idToDelete = idAttr.nodeValue;
         this.editing = false;
-
-
-        this.candidate = this.candidates[value];
-        this.candidateservice.deleteCandidate(this.candidate.empid);
-        // console.log(this.candidates[value]);
-        // console.log(value);
-        this.candidates.splice(value,1);
-        // console.log(this.candidates);
     }
-
+    onDelete()
+    {
+        this.candidate = this.candidates[this.idToDelete];
+        this.candidateservice.deleteCandidate(this.candidate.empid);
+        this.candidates.splice(this.idToDelete,1);
+    }
 
     search = (text$ : Observable < string >) => text$.pipe(debounceTime(200), distinctUntilChanged(), map(term => term.length < 1 ? [] : this.searchSuggestions.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
 

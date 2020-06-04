@@ -4,22 +4,31 @@
 			<form [formGroup]="addCandidateForm" (ngSubmit)="onSubmit()"
 				style="width: 60%; margin-left: 40%; padding-top: 60px;">
 				<label for="empid">Empid : </label>
-				<input type="text" id="empid" formControlName="empid" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="10" minlength="3">
+				<input type="text" id="empid" formControlName="empid" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="9" minlength="1">
+				<span *ngIf="!addCandidateForm.get('empid').valid && addCandidateForm.get('empid').touched"
+					class="help-block">Please Enter less than 10 characters without any special characters<br></span><br>
 
 				<label for="firstname">Firstname : </label>
-				<input type="text" id="firstname" formControlName="firstname" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="10" minlength="3">
+				<input type="text" id="firstname" formControlName="firstname" class="form-control" oninput="this.value = this.value.toLowerCase()" pattern="[a-zA-Z ]{3,20}">
+				<span *ngIf="!addCandidateForm.get('firstname').valid && addCandidateForm.get('firstname').touched"
+					class="help-block">Please Enter more than 10 characters without any special characters<br></span>
+				<br>
 
 				<label for="lastname">Lastname : </label>
-				<input type="text" id="lastname" formControlName="lastname" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="10">
+				<input type="text" id="lastname" formControlName="lastname" class="form-control" oninput="this.value = this.value.toLowerCase()" pattern="[a-zA-Z ]{1,20}">
+				<span *ngIf="!addCandidateForm.get('lastname').valid && addCandidateForm.get('lastname').touched"
+					class="help-block">Please Enter Details<br></span><br>
 
 				<label for="email">Email : </label>
-				<input type="email" id="email" formControlName="email" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="20" minlength="7">
+				<input type="email" id="email" formControlName="email" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="40" minlength="7">
 				<span *ngIf="!addCandidateForm.get('email').valid && addCandidateForm.get('email').touched"
-					class="help-block">Please Enter Valid Email Id!</span><br>
+					class="help-block">Please Enter Valid Email Id!<br></span><br>
 
 
 				<label for="contactnumber">Contact Number : </label>
-				<input type="text" id="contactnumber" formControlName="contactnumber" class="form-control" pattern="[0-9]{10}"><br>
+				<input type="text" id="contactnumber" formControlName="contactnumber" class="form-control" pattern="[0-9]{10}">
+				<span *ngIf="!addCandidateForm.get('contactnumber').valid && addCandidateForm.get('contactnumber').touched"
+					class="help-block">Please Enter 10 digits<br></span><br>
 
 				<label for="skills">Skills : </label>
 				<div formArrayName="skills" id="skills">
@@ -49,7 +58,7 @@
 
 				<label for="joiningdate">Joining Date : </label>
 				<input type="date" id="joiningdate" formControlName="joiningdate" class="form-control">
-
+				<br>
 
 				<label for="locationid">Location : </label>
 				<select formControlName="locationid" id="locationid" class="form-control">
@@ -59,13 +68,15 @@
 
 
 				<label for="feedback">Feedback : </label>
-				<input type="text" id="feedback" formControlName="feedback" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="20" minlength="3">
+				<input type="textarea" id="feedback" formControlName="feedback" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="20" minlength="4">
+				<span *ngIf="!addCandidateForm.get('feedback').valid && addCandidateForm.get('feedback').touched"
+					class="help-block">Please Enter Feedack with more than 3 characters<br></span>
 
-				<span *ngIf="!addCandidateForm.valid && addCandidateForm.touched" class="help-block">Please Enter Valid
-					Data!</span><br>
+				<span *ngIf="!addCandidateForm.valid && addCandidateForm.touched" class="help-block">Please Fill all fields!<br></span><br>
 
 
 				<!--  -->
+				<button class="btn-custom warning float-right" type="button" (click)="onReset()">Reset</button>
 				<button class="btn btn-primary float-right" [disabled]="!addCandidateForm.valid" type="submit">Submit</button>
 			</form>
 		</div>

@@ -8,8 +8,8 @@
 		<table style="width: 100%; margin-top: 30px;">
 			<tr>
 				<td style="width: 33%;">
-					<select formControlName="filter" id="filter" class="form-control" (change)="onChange()">
-						<option [value]="filter.id" *ngFor="let filter of filters">{{filter.value}} </option>
+					<select formControlName="filter" id="filter" class="form-control" (change)="onChange()" [(ngModel)]="initialFilter">
+						<option [value]="filter.id" *ngFor="let filter of filters" >{{filter.value}} </option>
 					</select>
 				</td>
 				<td style="width : 33%">
@@ -30,7 +30,7 @@
 				<th style="width: 20%; border: 1px solid black;"></th>
 			</tr>
 
-			<tr *ngFor="let candidate of candidates; let i = index">
+			<tr  *ngFor="let candidate of candidates | paginate : {id : 'listing_pagination', itemsPerPage:10,currentPage:page,totalItems : totalRecords } let i = index">
 				<td style="border: 1px solid black;">
 					<input id="empid" type="text" value="{{candidate.empid}}" class="form-control" disabled>
 				</td>
@@ -45,12 +45,17 @@
 					<button class="btn " id="{{i}}" (click)="onEdit($event)" style="background-color: green;"
 						type="button">Edit</button>
 					
-					<button  class="btn float-right	" id="{{i}}" (click)="onDelete($event)" style="background-color: Red;" type="button">Delete</button>
+					<button  class="btn float-right	" id="{{i}}" (click)="onMark($event)"  style="background-color: Red;" type="button" data-toggle="modal" data-target="#warning">Delete</button>
 				</div>
 				</td>
 			</tr>
-
-		</table>
+			
+		</table><br><br>
+		
+		<div style="text-align: center;">
+			<pagination-controls id="listing_pagination" maxSize=5 directionLinks="true" (pageChange)="page=$event"></pagination-controls>
+		</div>
+		<h3 *ngIf="empty && visible" style="text-align: center;">No Search Results Found!</h3>
 
 		<br>
 
@@ -60,74 +65,117 @@
 </div>
 
 
+<!-- <table>
+	<tr *ngFor="let d of candidates | paginate : {id : 'listing_pagination', itemsPerPage:10,currentPage:page,totalItems : totalRecords }">
+		<td>{{d.empid}}</td>
+	</tr>
+</table> -->
+<!-- <div>
+	<pagination-controls id="listing_pagination" maxSize=5 directionLinks="true" (pageChange)="page=$event"></pagination-controls>
+</div> -->
+
+
+
+<div class="modal fade" id="warning" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLongTitle">Warning!</h5>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+		  Do you want to delete it? Cannot undo this operation! 
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		  <button type="button" class="btn btn-primary" (click)="onDelete()" data-dismiss="modal"  style="background-color: red;">Delete</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+
+
 
 
 <div class="container" style="border: grey solid;" *ngIf="editing">
 	<div class="row">
 		<div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
 			<form [formGroup]="updateCandidateForm" (ngSubmit)="onUpdate()"
-				style="width: 60%; margin-left: 40%; padding-top: 60px;">
-				<label for="empid">Empid : </label>
-				<input type="text" id="empid" formControlName="empid" class="form-control" oninput="this.value = this.value.toLowerCase()" disabled>
+				
+			style="width: 60%; margin-left: 40%; padding-top: 60px;">
+			<label for="empid">Empid : </label>
+			<input type="text" id="empid" formControlName="empid" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="9" minlength="1" disabled>
+			<span *ngIf="!updateCandidateForm.get('empid').valid && updateCandidateForm.get('empid').touched"
+				class="help-block">Please Enter less than 10 characters without any special characters<br></span><br>
 
-				<label for="firstname">Firstname : </label>
-				<input type="text" id="firstname" formControlName="firstname" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="10" minlength="3">
+			<label for="firstname">Firstname : </label>
+			<input type="text" id="firstname" formControlName="firstname" class="form-control" oninput="this.value = this.value.toLowerCase()" pattern="[a-zA-Z ]{3,20}">
+			<span *ngIf="!updateCandidateForm.get('firstname').valid && updateCandidateForm.get('firstname').touched"
+				class="help-block">Please Enter more than 10 characters without any special characters<br></span>
+			<br>
 
-				<label for="lastname">Lastname : </label>
-				<input type="text" id="lastname" formControlName="lastname" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="10" >
+			<label for="lastname">Lastname : </label>
+			<input type="text" id="lastname" formControlName="lastname" class="form-control" oninput="this.value = this.value.toLowerCase()" pattern="[a-zA-Z ]{1,20}">
+			<span *ngIf="!updateCandidateForm.get('lastname').valid && updateCandidateForm.get('lastname').touched"
+				class="help-block">Please Enter detail<br></span><br>
 
-				<label for="email">Email : </label>
-				<input type="email" id="email" formControlName="email" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="20" minlength="7">
-				<span *ngIf="!updateCandidateForm.get('email').valid && updateCandidateForm.get('email').touched"
-					class="help-block">Please Enter Valid Email Id!</span><br>
+			<label for="email">Email : </label>
+			<input type="email" id="email" formControlName="email" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="40" minlength="7">
+			<span *ngIf="!updateCandidateForm.get('email').valid && updateCandidateForm.get('email').touched"
+				class="help-block">Please Enter Valid Email Id!<br></span><br>
 
 
-				<label for="contactnumber">Contact Number : </label>
-				<input type="text" id="contactnumber" formControlName="contactnumber" class="form-control" pattern="[0-9]{10}"><br>
+			<label for="contactnumber">Contact Number : </label>
+			<input type="text" id="contactnumber" formControlName="contactnumber" class="form-control" pattern="[0-9]{10}">
+			<span *ngIf="!updateCandidateForm.get('contactnumber').valid && updateCandidateForm.get('contactnumber').touched"
+				class="help-block">Please Enter 10 digits<br></span><br>
 
-				<label for="skills">Skills : </label>
-				<div formArrayName="skills" id="skills">
-					<button class="btn btn-primary" type="button" (click)="onAddSkill()">Add Skill</button>
-					<br><br>
-					<div class="form-group"
-						*ngFor="let skillControl of updateCandidateForm.get('skills')['controls']; let i = index">
-						<select [formControlName]="i" class="form-control">
-							<option [value]="skill.skillid" *ngFor="let skill of skills">{{skill.skill | titlecase}} </option>
-						</select><br>
-					</div>
+			<label for="skills">Skills : </label>
+			<div formArrayName="skills" id="skills">
+				<button class="btn btn-primary" type="button" (click)="onAddSkill()">Add Skill</button>
+				<br><br>
+				<div class="form-group"
+					*ngFor="let skillControl of updateCandidateForm.get('skills')['controls']; let i = index">
+					<select [formControlName]="i" class="form-control">
+						<option [value]="skill.skillid" *ngFor="let skill of skills">{{skill.skill | titlecase}} </option>
+					</select><br>
 				</div>
-				<br>
+			</div>
+			<br>
 
 
-				<label for="instituteid">Institutes : </label>
-				<select formControlName="instituteid" id="instituteid" class="form-control">
-					<option [value]="institute.instituteid" *ngFor="let institute of institutes">{{institute.institute | titlecase}}
-					</option>
-				</select><br>
+			<label for="instituteid">Institutes : </label>
+			<select formControlName="instituteid" id="instituteid" class="form-control">
+				<option [value]="institute.instituteid" *ngFor="let institute of institutes">{{institute.institute | titlecase}} </option>
+			</select><br>
 
 
-				<label for="jobdescriptionid">Job Description : </label>
-				<select formControlName="jobdescriptionid" id="jobdescriptionid" class="form-control">
-					<option [value]="jobdescription.jobdescriptionid" *ngFor="let jobdescription of jobdescriptions">
-						{{jobdescription.jobdescription | titlecase}} </option>
-				</select><br>
+			<label for="jobdescriptionid">Job Description : </label>
+			<select formControlName="jobdescriptionid" id="jobdescriptionid" class="form-control">
+				<option [value]="jobdescription.jobdescriptionid" *ngFor="let jobdescription of jobdescriptions">
+					{{jobdescription.jobdescription | titlecase}} </option>
+			</select><br>
 
-				<label for="joiningdate">Joining Date : </label>
-				<input type="date" id="joiningdate" formControlName="joiningdate" class="form-control">
+			<label for="joiningdate">Joining Date : </label>
+			<input type="date" id="joiningdate" formControlName="joiningdate" class="form-control">
+			<br>
+
+			<label for="locationid">Location : </label>
+			<select formControlName="locationid" id="locationid" class="form-control">
+				<option [value]="location.locationid" *ngFor="let location of locations">{{location.location | titlecase}} </option>
+			</select><br>
 
 
-				<label for="locationid">Location : </label>
-				<select formControlName="locationid" id="locationid" class="form-control">
-					<option [value]="location.locationid" *ngFor="let location of locations">{{location.location | titlecase}}
-					</option>
-				</select><br>
 
+			<label for="feedback">Feedback : </label>
+			<input type="textarea" id="feedback" formControlName="feedback" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="20" minlength="4">
+			<span *ngIf="!updateCandidateForm.get('feedback').valid && updateCandidateForm.get('feedback').touched"
+				class="help-block">Please Enter Feedack with more than 3 characters<br></span>
 
-				<label for="feedback">Feedback : </label>
-				<input type="text" id="feedback" formControlName="feedback" class="form-control" oninput="this.value = this.value.toLowerCase()" maxlength="20" minlength="3">
+			<span *ngIf="!updateCandidateForm.valid && updateCandidateForm.touched" class="help-block">Please Fill all fields!<br></span><br>
 
-				<span *ngIf="!updateCandidateForm.valid && updateCandidateForm.touched" class="help-block">Please Enter
-					Valid Data!</span><br>
 
 
 				<!--  -->

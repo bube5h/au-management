@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
-import { Label } from 'ng2-charts';
+import { Label, Color } from 'ng2-charts';
 import { LocationService } from 'src/app/services/location.service';
 import { JobdescriptionService } from 'src/app/services/jobdescription.service';
 import { SkillService } from 'src/app/services/skill.service';
@@ -11,6 +11,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TrendService } from 'src/app/services/trend.service';
 import { ChartsModule } from 'ng2-charts';
 import { BaseChartDirective } from 'ng2-charts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-trends',
@@ -20,10 +21,23 @@ import { BaseChartDirective } from 'ng2-charts';
 export class TrendsComponent implements OnInit
 {
 
+  single: any[] = [ ];
+  view: any[] = [700, 400];
+  // options
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = '';
+  showYAxisLabel = true;
+  yAxisLabel = 'No. of Candidates';
+  bar : boolean = true;
+  pie : boolean = false;
+  ButtonValue : String = "Toggle To Pie Chart"
+
   constructor(private trendservice : TrendService,private locationservice : LocationService, private jobdescriptionservice : JobdescriptionService, private skillservice : SkillService, private instituteservice : InstituteService, private candidateservice : CandidateService, private http : HttpClient) {}
-
- public visible : boolean = false;
-
+  public visible : boolean = false;
   public filters = [
     {
         value: "Locations",
@@ -38,6 +52,7 @@ export class TrendsComponent implements OnInit
         id: "skills"
     }
   ];
+  initialFilter: String = "skills"
   trendForm : FormGroup;
 
   ngOnInit()
@@ -46,6 +61,19 @@ export class TrendsComponent implements OnInit
       'filter': new FormControl(null, Validators.required)
   });
 
+  
+   this.trendservice.getSkillsCount().subscribe(trends => {
+            let data: any[] = [];
+            for(let trend of trends)
+            {
+              data.push({
+                "name" : trend.label,
+                "value" : trend.count
+              })
+            }
+            this.single= data;
+            this.xAxisLabel = "Skills";
+          });
   }
 
 
@@ -57,125 +85,65 @@ export class TrendsComponent implements OnInit
     switch (currentFilter) {
        case "locations":
             this.trendservice.getLocationsCount().subscribe(trends => {
-               let data : number[] = [];
-               let label : Label[] = [];
-               for(let trend of trends)
-               {
-                  data.push(trend.count);
-                  label.push(<Label>trend.label);
-               }
+              let data: any[] = [];
+              for(let trend of trends)
+              {
+                data.push({
+                  "name" : trend.label,
+                  "value" : trend.count
+                })
+              }
+              this.single= data;
+              this.xAxisLabel = "Locations";
                
-                this.lineChartData = data;
-                this.lineChartLabels = label;
-                console.log(this.lineChartData);
-                console.log(this.lineChartLabels);
-                this.labelMFL =  [
-                  { data: this.lineChartData,
-                    label: 'Locations'
-                  }
-              ];
-                this.chart.chart.update();
+              
             });
             break;
         case "institutes":
           this.trendservice.getInstitutesCount().subscribe(trends => {
-            let data : number[] = [];
-            let label : Label[] = [];
+            let data: any[] = [];
             for(let trend of trends)
             {
-               data.push(trend.count);
-               label.push(<Label>trend.label);
+              data.push({
+                "name" : trend.label,
+                "value" : trend.count
+              })
             }
-            this.lineChartData = data;
-            this.lineChartLabels = label;
-            console.log(this.lineChartData);
-            console.log(this.lineChartLabels);
-            this.labelMFL =  [
-              { data: this.lineChartData,
-                label: 'Institutes'
-              }
-          ];
-            this.chart.chart.update();
+            this.single= data;
+            this.xAxisLabel = "Institutes";
          });
             break;
         case "skills":
           this.trendservice.getSkillsCount().subscribe(trends => {
-            let data : number[] = [];
-            let label : Label[] = [];
+            let data: any[] = [];
             for(let trend of trends)
             {
-               data.push(trend.count);
-               label.push(<Label>trend.label);
+              data.push({
+                "name" : trend.label,
+                "value" : trend.count
+              })
             }
-            this.lineChartData = data;
-            this.lineChartLabels = label;
-            this.labelMFL =  [
-              { data: this.lineChartData,
-                label: 'Skills'
-              }
-          ];
-
-            console.log(this.lineChartData);
-            console.log(this.lineChartLabels);
-            this.chart.chart.update();
-
+            this.single= data;
+            this.xAxisLabel = "Skills";
+     
          });
             break;
     this.visible = true;
             
     }
-}
-
-
-@ViewChild(BaseChartDirective) chart: BaseChartDirective;
-  public label = 8;
-  public a = 0;
-
-  public lineChartData: Array<any> = [1,2 ,3];
-
-  public lineChartLabels: Array<any> = ["a","b","c"];
-  public lineChartOptions: any = {
-    responsive: true,
-    scales : {
-    yAxes: [{
-       ticks: {
-          min : 0,
-        }
-    }] 
   }
-  };
 
-  public labelMFL: Array<any> = [
-      { data: this.lineChartData,
-        label: 'aa'
-      }
-  ];
-
-  public lineChartColors: Array<any> = [
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+  onChangeChart()
+  {
+    this.bar = !this.bar;
+    this.pie = !this.pie;
+    if(this.bar)
+    {
+      this.ButtonValue = "Toggle To Pie Chart"
     }
-  ];
-  public lineChartLegend: boolean = true;
-  public lineChartType = 'line';
-
-    // // events
-    // public chartClicked(e: any): void {
-    //   console.log(e);
-    // }
-  
-    // public chartHovered(e: any): void {
-    //   console.log(e);
-    // }
-  
-
-
-
-
-
+    else
+    {
+      this.ButtonValue = "Toggle To Bar Chart"
+    }
+  }
 }

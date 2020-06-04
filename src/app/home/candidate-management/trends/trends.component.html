@@ -1,11 +1,11 @@
-<div class="container" style="padding-top: 3%; margin-top: 3%;border: 1px solid black;">
+<div class="container" style="padding-top: 3%; margin-top: 3%;">
 
       <form [formGroup]="trendForm">
         <table style="width: 100%;">
           <tr>
             <td style="width: 20%;"></td>
             <td style="width: 30%;">
-              <select formControlName="filter" id="filter" class="form-control" (change)="onChange()">
+              <select formControlName="filter" id="filter" class="form-control" (change)="onChange()" [(ngModel)]="initialFilter">
                 <option [value]="filter.id" *ngFor="let filter of filters">{{filter.value}} </option>
             </select>    
             </td>
@@ -15,54 +15,31 @@
         <br><br>
 
       </form> 
-    <div  class="chart" [hidden]="!visible">
-      <canvas baseChart 
-             
-              [datasets]="labelMFL"
-              [labels]="lineChartLabels"
-              [options]="lineChartOptions"
-              [colors]="lineChartColors"
-              [legend]="lineChartLegend"
-              [chartType]="lineChartType"
-              >
-          </canvas>
-    </div>
-
-    
+    <div [hidden]="!bar">
+      <ngx-charts-bar-vertical
+      [view]="view"
+      [results]="single"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="showLegend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel">
+    </ngx-charts-bar-vertical>
+  </div>
+  <div [hidden]="!pie">
+    <ngx-charts-pie-chart
+      [view]="view"
+      [results]="single"
+      [legend]=true
+      [labels]=true
+      >
+    </ngx-charts-pie-chart>
+  </div>
+    <div style="margin-left: 800px;">
+  <button class="btn-primary float-right" style="position: fixed;" (click)="onChangeChart()" type="button" >{{ButtonValue}}</button>
+ 
 
 </div>
-
-<!-- (chartHover)="chartHovered($event)"
-              (chartClick)="chartClicked($event)" -->
-
-
-
-
-
-
-<!-- <div style="margin-top: 3%;">
-    <div class="container" style="padding-top: 3%; border: 1px solid black;">
-        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills" style="margin-left: 27%;" >
-            <li [ngbNavItem]="1">
-              <a ngbNavLink>Line Chart</a>
-              <ng-template ngbNavContent>
-                <p><app-line-chart></app-line-chart></p>
-              </ng-template>
-            </li>
-            <li [ngbNavItem]="2">
-              <a ngbNavLink>Bar Chart</a>
-              <ng-template ngbNavContent>
-                <p><app-bar-chart></app-bar-chart></p>
-              </ng-template>
-            </li>
-            <li [ngbNavItem]="3">
-              <a ngbNavLink>Pie Chart</a>
-              <ng-template ngbNavContent>
-                <p><app-pie-chart></app-pie-chart></p>
-              </ng-template>
-            </li>
-        </ul>
-          <div [ngbNavOutlet]="nav" class="mt-2" ></div>
-</div>
-
-</div> -->

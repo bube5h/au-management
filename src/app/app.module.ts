@@ -22,6 +22,10 @@ import { PieChartComponent } from './home/candidate-management/trends/pie-chart/
 import { ChartsModule } from 'ng2-charts';
 import { TrendService } from './services/trend.service';
 import { SocialLoginModule, AuthServiceConfig,GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import {NgxPaginationModule} from 'ngx-pagination';
+
 const config = new AuthServiceConfig([
   {
     id: GoogleLoginProvider.PROVIDER_ID,
@@ -56,7 +60,10 @@ export function provideConfig() {
     HttpClientModule,
     ReactiveFormsModule,
     ChartsModule,
-    SocialLoginModule
+    SocialLoginModule,
+    NgxChartsModule,
+    BrowserAnimationsModule,
+    NgxPaginationModule
   ],
   providers: [LocationService,
     {
